@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Redwood Coast Design Inventory Studio</title>
+<style>
+:root{
+  --bg:#fff7fb;
+  --bg2:#f4fbff;
+  --card:#ffffff;
+  --ink:#1f2933;
+  --muted:#697586;
+  --line:#eadde8;
+  --accent:#ff7cad;
+  --accent-dark:#d94d82;
+  --accent2:#7bdff2;
+  --accent3:#c3f584;
+  --gold:#ffe08a;
+  --danger:#c0392b;
+  --success:#277a46;
+  --shadow:0 12px 30px rgba(31,41,51,.10);
+  --radius:22px;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Arial,Helvetica,sans-serif;
+  color:var(--ink);
+  background:
+    radial-gradient(circle at top left,#ffe6f1 0,#fff7fb 36%,transparent 37%),
+    linear-gradient(135deg,var(--bg),var(--bg2));
+  min-height:100vh;
+}
+header{
+  padding:26px 16px 20px;
+  background:linear-gradient(135deg,#ff7cad,#7bdff2);
+  color:white;
+  text-align:center;
+  position:sticky;
+  top:0;
+  z-index:20;
+  box-shadow:var(--shadow);
+}
+header h1{margin:0;font-size:28px;letter-spacing:.3px}
+header p{margin:7px 0 0;font-size:14px;opacity:.95}
+main{max-width:1320px;margin:auto;padding:18px}
+.nav{
+  display:flex;
+  gap:10px;
+  overflow-x:auto;
+  padding:12px 0 18px;
+  position:sticky;
+  top:104px;
+  background:linear-gradient(180deg,#fff7fb 75%,rgba(255,247,251,0));
+  z-index:15;
+}
+.nav button{
+  border:1px solid var(--line);
+  background:white;
+  color:var(--ink);
+  padding:11px 15px;
+  border-radius:999px;
+  font-weight:700;
+  cursor:pointer;
+  box-shadow:0 4px 12px rgba(31,41,51,.06);
+  white-space:nowrap;
+}
+.nav button.active{
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  color:white;
+  border-color:transparent;
+}
+.section{display:none}
+.section.active{display:block}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.card{
+  background:rgba(255,255,255,.94);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  padding:16px;
+}
+.stat{
+  min-height:110px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+.stat span{color:var(--muted);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.6px}
+.stat strong{font-size:34px;margin-top:6px}
+.stat small{color:var(--muted);margin-top:5px}
+h2{margin:8px 0 14px;font-size:24px}
+h3{margin:0 0 12px;font-size:18px}
+.form-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+label{font-size:12px;font-weight:700;color:#475467}
+input,select,textarea{
+  width:100%;
+  padding:11px 12px;
+  border:1px solid var(--line);
+  border-radius:14px;
+  background:#fff;
+  font-size:14px;
+  color:var(--ink);
+}
+textarea{min-height:72px;resize:vertical}
+button.action{
+  border:0;
+  background:linear-gradient(135deg,var(--accent),var(--accent-dark));
+  color:white;
+  font-weight:800;
+  border-radius:16px;
+  padding:12px 16px;
+  cursor:pointer;
+  box-shadow:0 8px 18px rgba(217,77,130,.2);
+}
+button.secondary{
+  background:white;
+  color:var(--ink);
+  border:1px solid var(--line);
+  box-shadow:none;
+}
+button.danger{
+  background:var(--danger);
+}
+.toolbar{display:flex;flex-wrap:wrap;gap:10px;margin:12px 0}
+.table-wrap{overflow:auto;border-radius:18px;border:1px solid var(--line)}
+table{width:100%;border-collapse:collapse;background:white;min-width:900px}
+th,td{border-bottom:1px solid var(--line);padding:10px;text-align:left;font-size:13px;vertical-align:top}
+th{background:#fff0f7;font-size:12px;text-transform:uppercase;letter-spacing:.4px}
+tr:hover td{background:#fffafd}
+.pill{
+  display:inline-block;
+  padding:5px 9px;
+  border-radius:999px;
+  background:#eef9ff;
+  border:1px solid #d8f3fb;
+  font-size:12px;
+  font-weight:700;
+}
+.low{background:#fff3f0;border-color:#ffd4cc;color:#a83223}
+.good{background:#effff4;border-color:#c8f5d5;color:#206a3c}
+.row-actions{display:flex;gap:6px;flex-wrap:wrap}
+.row-actions button{
+  border:1px solid var(--line);
+  border-radius:12px;
+  background:white;
+  padding:7px 9px;
+  cursor:pointer;
+  font-weight:700;
+}
+.size-grid{
+  display:grid;
+  grid-template-columns:repeat(9,minmax(64px,1fr));
+  gap:8px;
+}
+.size-box{
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:9px;
+  background:#fffafd;
+}
+.size-box strong{display:block;font-size:12px;margin-bottom:6px}
+.invoice-preview{
+  background:white;
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:20px;
+}
+.invoice-head{
+  display:flex;
+  justify-content:space-between;
+  gap:16px;
+  border-bottom:2px solid #ffd3e5;
+  padding-bottom:12px;
+  margin-bottom:14px;
+}
+.invoice-title{font-size:30px;font-weight:900;color:var(--accent-dark)}
+.print-only{display:none}
+.notice{
+  background:#fffbea;
+  border:1px solid #ffe7a3;
+  border-radius:16px;
+  padding:12px;
+  color:#7a5200;
+  margin:10px 0;
+}
+.searchbar{display:grid;grid-template-columns:1fr auto;gap:10px;margin-bottom:12px}
+@media(max-width:900px){
+  .grid,.form-grid{grid-template-columns:1fr 1fr}
+  .size-grid{grid-template-columns:repeat(3,1fr)}
+  header{position:relative}
+  .nav{top:0}
+}
+@media(max-width:560px){
+  main{padding:12px}
+  .grid,.form-grid{grid-template-columns:1fr}
+  .invoice-head{flex-direction:column}
+}
+@media print{
+  body{background:white}
+  header,.nav,.no-print,.toolbar,.form-card{display:none!important}
+  main{max-width:none;padding:0}
+  .section{display:block}
+  .section:not(.print-section){display:none!important}
+  .card{box-shadow:none;border:0}
+  .invoice-preview,.label-sheet{border:0}
+  .print-only{display:block}
+}
+.label-sheet{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:12px;
+}
+.label{
+  border:2px dashed #222;
+  border-radius:10px;
+  padding:12px;
+  min-height:120px;
+  background:white;
+}
+.label strong{font-size:18px}
+
+.focus-strip{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:12px;
+  margin:0 0 16px;
+}
+.focus-card{
+  background:linear-gradient(135deg,#ffffff,#fff0f7);
+  border:2px solid #ffd3e5;
+  border-radius:24px;
+  padding:14px;
+  box-shadow:0 8px 20px rgba(31,41,51,.08);
+}
+.focus-card b{display:block;font-size:16px;margin-bottom:4px}
+.focus-card span{font-size:13px;color:var(--muted)}
+.helper{
+  background:#f0fbff;
+  border:1px solid #ccefff;
+  border-radius:18px;
+  padding:12px 14px;
+  margin:8px 0 14px;
+  color:#315b66;
+  font-weight:700;
+}
+.soft-title{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
+.soft-title small{
+  color:var(--muted);
+  font-weight:700;
+  background:white;
+  border:1px solid var(--line);
+  border-radius:999px;
+  padding:7px 10px;
+}
+.big-choice{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:12px;
+  margin-bottom:14px;
+}
+.big-choice button{
+  min-height:80px;
+  border:2px solid #ffd3e5;
+  border-radius:22px;
+  background:white;
+  font-weight:900;
+  font-size:15px;
+  cursor:pointer;
+  box-shadow:0 8px 18px rgba(31,41,51,.08);
+}
+.big-choice button:hover{background:#fff0f7}
+.progress{
+  height:12px;
+  background:#f2f4f7;
+  border-radius:999px;
+  overflow:hidden;
+  margin-top:10px;
+}
+.progress i{
+  display:block;
+  height:100%;
+  background:linear-gradient(90deg,var(--accent),var(--accent2));
+  border-radius:999px;
+}
+.encourage{
+  background:linear-gradient(135deg,#fff9df,#fff0f7);
+  border:1px solid #ffe6a6;
+  border-radius:22px;
+  padding:16px;
+  margin-bottom:14px;
+  font-weight:800;
+}
+.step-tag{
+  display:inline-block;
+  background:#1f2933;
+  color:white;
+  border-radius:999px;
+  padding:5px 9px;
+  font-size:12px;
+  margin-right:6px;
+}
+input:focus,select:focus,textarea:focus{
+  outline:3px solid #bdefff;
+  border-color:#7bdff2;
+}
+@media(max-width:900px){
+  .focus-strip,.big-choice{grid-template-columns:1fr 1fr}
+}
+@media(max-width:560px){
+  .focus-strip,.big-choice{grid-template-columns:1fr}
+  .soft-title{display:block}
+}
+
+
+.bulk-builder{
+  background:#fffafd;
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:12px;
+  margin-top:12px;
+}
+.bulk-builder h4{
+  margin:0 0 10px;
+  font-size:15px;
+}
+.bulk-size-row{
+  display:grid;
+  grid-template-columns:repeat(9,minmax(58px,1fr));
+  gap:8px;
+}
+.bulk-size-row div{
+  background:white;
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:8px;
+}
+.bulk-size-row b{
+  display:block;
+  font-size:12px;
+  margin-bottom:5px;
+}
+.item-summary{
+  line-height:1.55;
+}
+@media(max-width:900px){
+  .bulk-size-row{grid-template-columns:repeat(3,1fr)}
+}
+
+
+.size-check{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  margin-bottom:6px;
+}
+.size-check input[type="checkbox"]{
+  width:auto;
+  transform:scale(1.15);
+}
+.size-check label{
+  font-size:13px;
+  color:var(--ink);
+}
+.bulk-size-row input[type="number"]{
+  padding:9px;
+}
+
+</style>
+</head>
+<body>
+<header>
+  <h1>Redwood Coast Design Inventory Studio</h1>
+  <p>Simple steps, clear lists, cheerful progress, and everything saved in one place</p>
+</header>
+
+<main>
+  <div class="nav no-print" id="nav"></div>
+
+  <section id="dashboard" class="section active">
+    <div class="soft-title"><h2>Today’s Focus</h2><small>Pick one thing and keep moving</small></div>
+    <div class="encourage">You do not have to organize everything at once. Start with the next order, the next hoodie, or the next low-stock item.</div>
+    <div class="focus-strip">
+      <div class="focus-card"><b>1. Add what came in</b><span>Log garments, DTF, or HTV before it disappears into a bin.</span></div>
+      <div class="focus-card"><b>2. Check what is low</b><span>Use the alerts before you start taking new orders.</span></div>
+      <div class="focus-card"><b>3. Print what is due</b><span>Open Orders, make labels, and press one batch at a time.</span></div>
+    </div>
+    <div class="big-choice no-print">
+      <button onclick="showTab('garments')">Add Garments</button>
+      <button onclick="showTab('orders')">Save Whole Order</button>
+      <button onclick="showTab('labels')">Print Labels</button>
+      <button onclick="showTab('invoice')">Make Invoice</button>
+    </div>
+    <h2>Quick Snapshot</h2>
+    <div class="grid">
+      <div class="card stat"><span>Garments on hand</span><strong id="statGarments">0</strong><small>Total pieces</small></div>
+      <div class="card stat"><span>DTF transfers</span><strong id="statDtf">0</strong><small>Total transfers</small></div>
+      <div class="card stat"><span>HTV yards</span><strong id="statHtv">0</strong><small>Remaining yards</small></div>
+      <div class="card stat"><span>Open orders</span><strong id="statOrders">0</strong><small>Not completed</small></div>
+    </div>
+    <div class="grid" style="margin-top:14px">
+      <div class="card stat"><span>Inventory value</span><strong id="statValue">$0</strong><small>Estimated cost value</small></div>
+      <div class="card stat"><span>Revenue</span><strong id="statRevenue">$0</strong><small>Order total</small></div>
+      <div class="card stat"><span>Profit</span><strong id="statProfit">$0</strong><small>Revenue minus cost</small></div>
+      <div class="card stat"><span>Ready to press</span><strong id="statReady">0</strong><small>Orders ready</small></div>
+    </div>
+    <div class="card" style="margin-top:14px">
+      <h3>Low Stock Alerts</h3>
+      <div id="lowAlerts"></div>
+    </div>
+    <div class="card no-print" style="margin-top:14px">
+      <h3>Backup & Data</h3>
+      <div class="toolbar">
+        <button class="action" onclick="backupData()">Download Backup</button>
+        <label class="action secondary" style="display:inline-block;cursor:pointer">Restore Backup<input type="file" accept=".json" style="display:none" onchange="restoreData(event)"></label>
+        <button class="action secondary" onclick="exportCSV()">Export CSV</button>
+        <button class="action danger" onclick="clearAll()">Clear All Data</button>
+      </div>
+      <div class="notice">Data saves in this device/browser. Use Download Backup often, especially before changing phones or clearing browser data.</div>
+    </div>
+  </section>
+
+  <section id="garments" class="section">
+    <div class="soft-title"><h2>Garment Inventory</h2><small>Group by style, color, then sizes</small></div><div class="helper"><span class="step-tag">Next step</span>Add one style at a time, then fill in the quantities for every size you have.</div>
+    <div class="card form-card">
+      <h3>Add Garment Size Run</h3>
+      <div class="form-grid">
+        <div><label>Item Type</label><select id="gType"><option>T-Shirt</option><option>Hoodie</option><option>Crewneck</option><option>Polo</option><option>Tank</option><option>Hat</option><option>Other</option></select></div>
+        <div><label>Brand / Style</label><input id="gBrand" placeholder="Gildan, Bella, Jerzees"></div>
+        <div><label>Color</label><input id="gColor" placeholder="Ash, Black, Sand"></div>
+        <div><label>Supplier</label><input id="gSupplier"></div>
+        <div><label>Cost Each</label><input id="gCost" type="number" step="0.01"></div>
+        <div><label>Location</label><input id="gLocation" placeholder="Bin A"></div>
+        <div><label>Barcode / SKU</label><input id="gBarcode" placeholder="Scan or type"></div>
+        <div><label>Low Stock Alert</label><input id="gReorder" type="number" value="2"></div>
+      </div>
+      <div style="margin-top:12px"><label>Notes</label><textarea id="gNotes"></textarea></div>
+      <h3 style="margin-top:16px">Sizes</h3>
+      <div class="size-grid" id="sizeGrid"></div>
+      <div class="toolbar"><button class="action" onclick="addGarmentRun()">Save Garment Sizes</button></div>
+    </div>
+    <div class="card">
+      <div class="searchbar"><input id="garmentSearch" placeholder="Search garments..." oninput="renderAll()"><button class="action secondary" onclick="printSection('garments')">Print</button></div>
+      <div class="table-wrap"><table><thead><tr><th>Type</th><th>Brand/Style</th><th>Color</th><th>Size</th><th>Qty</th><th>Cost</th><th>Location</th><th>Barcode</th><th>Status</th><th>Actions</th></tr></thead><tbody id="garmentRows"></tbody></table></div>
+    </div>
+  </section>
+
+  <section id="dtf" class="section">
+    <div class="soft-title"><h2>DTF Transfer Inventory</h2><small>Designs, sizes, and placements</small></div><div class="helper"><span class="step-tag">Next step</span>Log the design name first, then size and placement. Keep it simple and searchable.</div>
+    <div class="card form-card">
+      <h3>Add DTF Transfer</h3>
+      <div class="form-grid">
+        <div><label>Design Name</label><input id="dName"></div>
+        <div><label>Team / Customer</label><input id="dCustomer"></div>
+        <div><label>Width Inches</label><input id="dWidth" type="number" step="0.01"></div>
+        <div><label>Height Inches</label><input id="dHeight" type="number" step="0.01"></div>
+        <div><label>Placement / Style</label><select id="dPlace"><option>Full Front</option><option>Full Back</option><option>Small Chest</option><option>Whole Chest</option><option>Arm</option><option>Sleeve</option><option>Leg</option><option>Custom</option></select></div>
+        <div><label>Quantity</label><input id="dQty" type="number" value="1"></div>
+        <div><label>Cost Each</label><input id="dCost" type="number" step="0.01"></div>
+        <div><label>Location</label><input id="dLocation"></div>
+        <div><label>Low Stock Alert</label><input id="dReorder" type="number" value="1"></div>
+        <div><label>Barcode / SKU</label><input id="dBarcode"></div>
+      </div>
+      <div style="margin-top:12px"><label>Notes</label><textarea id="dNotes"></textarea></div>
+      <div class="toolbar"><button class="action" onclick="addDtf()">Save Transfer</button></div>
+    </div>
+    <div class="card">
+      <div class="searchbar"><input id="dtfSearch" placeholder="Search transfers..." oninput="renderAll()"><button class="action secondary" onclick="printSection('dtf')">Print</button></div>
+      <div class="table-wrap"><table><thead><tr><th>Design</th><th>Customer</th><th>Size</th><th>Placement</th><th>Qty</th><th>Cost</th><th>Location</th><th>Barcode</th><th>Status</th><th>Actions</th></tr></thead><tbody id="dtfRows"></tbody></table></div>
+    </div>
+  </section>
+
+  <section id="htv" class="section">
+    <div class="soft-title"><h2>HTV Inventory</h2><small>Yards remaining by color</small></div><div class="helper"><span class="step-tag">Next step</span>Enter type, color, and yards left. Low-yard alerts will help you reorder before a rush job.</div>
+    <div class="card form-card">
+      <h3>Add HTV</h3>
+      <div class="form-grid">
+        <div><label>Type / Material</label><select id="hType"><option>Easyweed</option><option>Glitter</option><option>Puff</option><option>Stretch</option><option>Flock</option><option>Metallic</option><option>Printable</option><option>Other</option></select></div>
+        <div><label>Color</label><input id="hColor"></div>
+        <div><label>Width</label><input id="hWidth" placeholder="12 in, 15 in, 20 in"></div>
+        <div><label>Yards Remaining</label><input id="hYards" type="number" step="0.01"></div>
+        <div><label>Supplier</label><input id="hSupplier"></div>
+        <div><label>Location</label><input id="hLocation"></div>
+        <div><label>Low Yard Alert</label><input id="hReorder" type="number" step="0.01" value="1"></div>
+        <div><label>Barcode / SKU</label><input id="hBarcode"></div>
+      </div>
+      <div style="margin-top:12px"><label>Notes</label><textarea id="hNotes"></textarea></div>
+      <div class="toolbar"><button class="action" onclick="addHtv()">Save HTV</button></div>
+    </div>
+    <div class="card">
+      <div class="searchbar"><input id="htvSearch" placeholder="Search HTV..." oninput="renderAll()"><button class="action secondary" onclick="printSection('htv')">Print</button></div>
+      <div class="table-wrap"><table><thead><tr><th>Type</th><th>Color</th><th>Width</th><th>Yards</th><th>Supplier</th><th>Location</th><th>Barcode</th><th>Status</th><th>Actions</th></tr></thead><tbody id="htvRows"></tbody></table></div>
+    </div>
+  </section>
+
+  <section id="orders" class="section">
+    <div class="soft-title"><h2>Orders</h2><small>One order can have many items</small></div><div class="helper"><span class="step-tag">Next step</span>Add the customer once, then add as many different items as needed. Example: 2 black hoodies, 1 pink crewneck, and 4 white tees can all stay on the same order.</div>
+    <div class="card form-card">
+      <h3>Add Order</h3>
+      <div class="form-grid">
+        <div><label>Order Number</label><input id="oNumber"></div>
+        <div><label>Customer / Team</label><input id="oCustomer"></div>
+        <div><label>Phone</label><input id="oPhone"></div>
+        <div><label>Email</label><input id="oEmail"></div>
+        <div><label>Status</label><select id="oStatus"><option>Waiting for Garments</option><option>Waiting for Transfers</option><option>Waiting for HTV</option><option>Ready to Press</option><option>Pressed / Complete</option><option>Picked Up</option></select></div>
+        <div><label>Due Date</label><input id="oDue" type="date"></div>
+      </div>
+
+      <h3 style="margin-top:16px">Build This Order</h3>
+      <div class="form-grid">
+        <div><label>Item</label><input id="oiItem" placeholder="Hoodie, shirt, crewneck"></div>
+        <div><label>Color</label><input id="oiColor"></div>
+        <div><label>One Size</label><select id="oiSize"><option>XS</option><option>S</option><option>M</option><option>L</option><option>XL</option><option>2XL</option><option>3XL</option><option>4XL</option><option>5XL</option><option>Custom</option></select></div>
+        <div><label>One Qty</label><input id="oiQty" type="number" value="1"></div>
+        <div><label>Unit Price</label><input id="oiPrice" type="number" step="0.01"></div>
+        <div><label>Unit Cost</label><input id="oiCost" type="number" step="0.01"></div>
+        <div><label>Design / Placement</label><input id="oiDesign" placeholder="Full front, small chest"></div>
+        <div><label>&nbsp;</label><button class="action secondary" onclick="addTempOrderItem()">Add One Size Only</button></div>
+      </div>
+      <div class="bulk-builder">
+        <h4>Enter one item, check each size you need, enter quantity for each checked size, then add another different item if needed</h4>
+        <div class="bulk-size-row" id="orderBulkSizes"></div>
+        <div class="toolbar"><button class="action" onclick="addTempOrderBulkSizes()">Add This Item + All Sizes</button></div>
+      </div>
+      <div class="notice">Current order items are listed below. One item can include many sizes. Add another different item above before tapping Save Whole Order.</div><div class="table-wrap" style="margin-top:12px"><table style="min-width:700px"><thead><tr><th>Item</th><th>Color</th><th>Size</th><th>Qty</th><th>Unit Price</th><th>Unit Cost</th><th>Design</th><th></th></tr></thead><tbody id="tempOrderItems"></tbody></table></div>
+
+      <div style="margin-top:12px"><label>Notes / Artwork Info</label><textarea id="oNotes"></textarea></div>
+      <div class="toolbar"><button class="action" onclick="addOrder()">Save Whole Order</button></div>
+    </div>
+    <div class="card">
+      <div class="searchbar"><input id="orderSearch" placeholder="Search orders..." oninput="renderAll()"><button class="action secondary" onclick="printSection('orders')">Print</button></div>
+      <div class="table-wrap"><table><thead><tr><th>Order #</th><th>Customer</th><th>Items</th><th>Total Qty</th><th>Status</th><th>Due</th><th>Total Price</th><th>Profit</th><th>Actions</th></tr></thead><tbody id="orderRows"></tbody></table></div>
+    </div>
+  </section>
+
+  <section id="invoice" class="section">
+    <div class="soft-title"><h2>Invoice</h2><small>Retail or wholesale</small></div><div class="helper"><span class="step-tag">Next step</span>Add as many different invoice items as needed. Each item can have its own color, size, quantity, and price. Use wholesale to remove sales tax.</div>
+    <div class="card form-card no-print">
+      <h3>Create Invoice</h3>
+      <div class="form-grid">
+        <div><label>Invoice Number</label><input id="iNumber"></div>
+        <div><label>Invoice Date</label><input id="iDate" type="date"></div>
+        <div><label>Customer</label><input id="iCustomer"></div>
+        <div><label>Email / Phone</label><input id="iContact"></div>
+        <div><label>Invoice Type</label><select id="iWholesale" onchange="renderInvoice()"><option value="retail">Retail - include tax</option><option value="wholesale">Wholesale - no sales tax</option></select></div>
+        <div><label>Sales Tax %</label><input id="iTax" type="number" step="0.01" value="8.75" oninput="renderInvoice()"></div>
+      </div>
+      <h3 style="margin-top:16px">Build This Invoice</h3>
+      <div class="form-grid">
+        <div><label>Item / Description</label><input id="liDesc"></div>
+        <div><label>Color</label><input id="liColor"></div>
+        <div><label>One Size</label><input id="liSize"></div>
+        <div><label>One Qty</label><input id="liQty" type="number" value="1"></div>
+        <div><label>Unit Price</label><input id="liPrice" type="number" step="0.01"></div>
+        <div><label>&nbsp;</label><button class="action" onclick="addLineItem()">Add One Size Only</button></div>
+      </div>
+      <div class="bulk-builder">
+        <h4>Enter one invoice item, check each size you need, enter quantity for each checked size, then add another different item if needed</h4>
+        <div class="bulk-size-row" id="invoiceBulkSizes"></div>
+        <div class="toolbar"><button class="action" onclick="addInvoiceBulkSizes()">Add This Invoice Item + All Sizes</button></div>
+      </div>
+      <div class="notice">Current invoice items appear in the preview below. One item can include many sizes. Add another different item above anytime before printing.</div>
+      <div style="margin-top:12px"><label>Notes</label><textarea id="iNotes" oninput="renderInvoice()"></textarea></div>
+      <div class="toolbar">
+        <button class="action" onclick="window.print()">Print / Save PDF</button>
+        <button class="action secondary" onclick="clearInvoice()">Clear Invoice</button>
+      </div>
+    </div>
+    <div class="card print-section">
+      <div class="invoice-preview" id="invoicePreview"></div>
+    </div>
+  </section>
+
+  <section id="labels" class="section">
+    <div class="soft-title"><h2>Labels</h2><small>Order labels plus individual garment labels</small></div><div class="helper"><span class="step-tag">Next step</span>Choose an order, print one full order label, then individual labels for each item.</div>
+    <div class="card form-card no-print">
+      <h3>Print Order Labels</h3>
+      <div class="form-grid">
+        <div><label>Select Order</label><select id="labelOrder" onchange="renderLabels()"></select></div>
+        <div><label>Individual Labels</label><input id="labelCount" type="number" value="1" onchange="renderLabels()"></div>
+        <div><label>&nbsp;</label><button class="action" onclick="window.print()">Print Labels</button></div>
+      </div>
+    </div>
+    <div class="card print-section">
+      <div id="labelPreview"></div>
+    </div>
+  </section>
+
+  <section id="reports" class="section">
+    <div class="soft-title"><h2>Reports</h2><small>Simple numbers, no digging</small></div><div class="helper"><span class="step-tag">Next step</span>Use this page when you need low stock, value, sales, or best-selling items at a glance.</div>
+    <div class="grid">
+      <div class="card stat"><span>Garment Value</span><strong id="repGarmentValue">$0</strong></div>
+      <div class="card stat"><span>DTF Value</span><strong id="repDtfValue">$0</strong></div>
+      <div class="card stat"><span>HTV Yards</span><strong id="repHtvYards">0</strong></div>
+      <div class="card stat"><span>Best Seller</span><strong id="repBest">-</strong></div>
+    </div>
+    <div class="card" style="margin-top:14px">
+      <h3>Low Stock Report</h3>
+      <div id="reportLow"></div>
+    </div>
+  </section>
+</main>
+
+<script>
+const tabs=[
+  ['dashboard','Dashboard'],['garments','Garments'],['dtf','DTF Transfers'],['htv','HTV'],['orders','Orders'],['invoice','Invoice'],['labels','Labels'],['reports','Reports']
+];
+const sizes=['XS','S','M','L','XL','2XL','3XL','4XL','5XL'];
+let db=JSON.parse(localStorage.getItem('rcdStudio')||'{"garments":[],"dtf":[],"htv":[],"orders":[],"invoice":{"lines":[]}}');
+let tempOrderItems=[];
+
+function save(){localStorage.setItem('rcdStudio',JSON.stringify(db));renderAll();}
+function money(n){return '$'+(Number(n)||0).toFixed(2);}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7);}
+function val(id){return document.getElementById(id).value.trim();}
+function num(id){return Number(document.getElementById(id).value)||0;}
+function set(id,v){document.getElementById(id).value=v||'';}
+function esc(s){return String(s||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
+
+document.getElementById('nav').innerHTML=tabs.map((t,i)=>`<button onclick="showTab('${t[0]}')" class="${i===0?'active':''}">${t[1]}</button>`).join('');
+document.getElementById('sizeGrid').innerHTML=sizes.map(s=>`<div class="size-box"><strong>${s}</strong><input id="size_${s}" type="number" min="0" placeholder="Qty"></div>`).join('');
+function fillBulkSizeGrids(){
+  const order=document.getElementById('orderBulkSizes');
+  if(order)order.innerHTML=sizes.map(s=>`
+    <div>
+      <div class="size-check">
+        <input id="orderCheck_${s}" type="checkbox" onchange="toggleQty('order','${s}')">
+        <label for="orderCheck_${s}"><b>${s}</b></label>
+      </div>
+      <input id="orderBulk_${s}" type="number" min="0" placeholder="Qty" disabled>
+    </div>`).join('');
+  const invoice=document.getElementById('invoiceBulkSizes');
+  if(invoice)invoice.innerHTML=sizes.map(s=>`
+    <div>
+      <div class="size-check">
+        <input id="invoiceCheck_${s}" type="checkbox" onchange="toggleQty('invoice','${s}')">
+        <label for="invoiceCheck_${s}"><b>${s}</b></label>
+      </div>
+      <input id="invoiceBulk_${s}" type="number" min="0" placeholder="Qty" disabled>
+    </div>`).join('');
+}
+function toggleQty(prefix,size){
+  const check=document.getElementById(prefix+'Check_'+size);
+  const qty=document.getElementById(prefix+'Bulk_'+size);
+  if(!check||!qty)return;
+  qty.disabled=!check.checked;
+  if(check.checked && !qty.value)qty.value=1;
+  if(!check.checked)qty.value='';
+}
+fillBulkSizeGrids();
+document.getElementById('iDate').valueAsDate=new Date();
+
+function showTab(id){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active','print-section'));
+  document.getElementById(id).classList.add('active');
+  if(['invoice','labels'].includes(id))document.getElementById(id).classList.add('print-section');
+  document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));
+  [...document.querySelectorAll('.nav button')].find(b=>b.textContent===tabs.find(t=>t[0]===id)[1]).classList.add('active');
+  renderAll();
+}
+
+function addGarmentRun(){
+  let added=0;
+  sizes.forEach(s=>{
+    const q=Number(document.getElementById('size_'+s).value)||0;
+    if(q>0){
+      db.garments.push({id:uid(),type:val('gType'),brand:val('gBrand'),color:val('gColor'),size:s,qty:q,cost:num('gCost'),supplier:val('gSupplier'),location:val('gLocation'),barcode:val('gBarcode'),reorder:num('gReorder'),notes:val('gNotes')});
+      document.getElementById('size_'+s).value='';
+      added++;
+    }
+  });
+  if(!added) return alert('Enter a quantity for at least one size.');
+  ['gBrand','gColor','gSupplier','gCost','gLocation','gBarcode','gNotes'].forEach(id=>set(id,''));
+  save();
+}
+
+function addDtf(){
+  db.dtf.push({id:uid(),name:val('dName'),customer:val('dCustomer'),width:num('dWidth'),height:num('dHeight'),place:val('dPlace'),qty:num('dQty'),cost:num('dCost'),location:val('dLocation'),reorder:num('dReorder'),barcode:val('dBarcode'),notes:val('dNotes')});
+  ['dName','dCustomer','dWidth','dHeight','dQty','dCost','dLocation','dBarcode','dNotes'].forEach(id=>set(id,''));
+  set('dQty',1);set('dReorder',1);save();
+}
+function addHtv(){
+  db.htv.push({id:uid(),type:val('hType'),color:val('hColor'),width:val('hWidth'),yards:num('hYards'),supplier:val('hSupplier'),location:val('hLocation'),reorder:num('hReorder'),barcode:val('hBarcode'),notes:val('hNotes')});
+  ['hColor','hWidth','hYards','hSupplier','hLocation','hBarcode','hNotes'].forEach(id=>set(id,''));
+  set('hReorder',1);save();
+}
+function addTempOrderItem(){
+  const item={item:val('oiItem'),color:val('oiColor'),size:val('oiSize'),qty:num('oiQty'),price:num('oiPrice'),cost:num('oiCost'),design:val('oiDesign')};
+  if(!item.item || !item.qty){return alert('Add an item name and quantity.');}
+  tempOrderItems.push(item);
+  ['oiItem','oiColor','oiPrice','oiCost','oiDesign'].forEach(id=>set(id,''));
+  set('oiQty',1);
+  renderTempOrderItems();
+}
+function addTempOrderBulkSizes(){
+  const base={item:val('oiItem'),color:val('oiColor'),price:num('oiPrice'),cost:num('oiCost'),design:val('oiDesign')};
+  if(!base.item)return alert('Add an item name first.');
+  let added=0;
+  sizes.forEach(s=>{
+    const check=document.getElementById('orderCheck_'+s);
+    const el=document.getElementById('orderBulk_'+s);
+    const q=el?Number(el.value)||0:0;
+    if(check && check.checked && q>0){
+      tempOrderItems.push({...base,size:s,qty:q});
+      el.value='';
+      el.disabled=true;
+      check.checked=false;
+      added++;
+    }
+  });
+  if(!added)return alert('Check at least one size and enter a quantity.');
+  alert('Added '+added+' size line(s) for this item. Add another different item next, or save the whole order.');
+  ['oiItem','oiColor','oiPrice','oiCost','oiDesign'].forEach(id=>set(id,''));
+  set('oiQty',1);
+  renderTempOrderItems();
+}
+function removeTempOrderItem(i){
+  tempOrderItems.splice(i,1);
+  renderTempOrderItems();
+}
+function editTempOrderItem(i){
+  const x=tempOrderItems[i]; if(!x)return;
+  const item=prompt('Item',x.item); if(item===null)return;
+  const color=prompt('Color',x.color); if(color===null)return;
+  const size=prompt('Size',x.size); if(size===null)return;
+  const qty=prompt('Quantity',x.qty); if(qty===null)return;
+  const price=prompt('Unit Price',x.price); if(price===null)return;
+  const cost=prompt('Unit Cost',x.cost); if(cost===null)return;
+  const design=prompt('Design / Placement',x.design||''); if(design===null)return;
+  tempOrderItems[i]={item,color,size,qty:Number(qty)||0,price:Number(price)||0,cost:Number(cost)||0,design};
+  renderTempOrderItems();
+}
+function duplicateTempOrderItem(i){
+  const x=tempOrderItems[i]; if(!x)return;
+  tempOrderItems.push({...x});
+  renderTempOrderItems();
+}
+function renderTempOrderItems(){
+  const el=document.getElementById('tempOrderItems');
+  if(!el)return;
+  if(tempOrderItems.length===0){
+    el.innerHTML='<tr><td colspan="8">No items added yet. Add one item or a size group above.</td></tr>';
+    return;
+  }
+  el.innerHTML=tempOrderItems.map((x,i)=>`
+    <tr><td>${esc(x.item)}</td><td>${esc(x.color)}</td><td>${esc(x.size)}</td><td>${x.qty}</td><td>${money(x.price)}</td><td>${money(x.cost)}</td><td>${esc(x.design)}</td><td><div class="row-actions"><button onclick="editTempOrderItem(${i})">Edit</button><button onclick="duplicateTempOrderItem(${i})">Duplicate</button><button onclick="removeTempOrderItem(${i})">Remove</button></div></td></tr>`).join('');
+}
+function addOrder(){
+  if(tempOrderItems.length===0){
+    const quickItem=val('oiItem');
+    if(quickItem){addTempOrderItem();}
+  }
+  if(tempOrderItems.length===0)return alert('Add at least one order item.');
+  const totalPrice=tempOrderItems.reduce((a,x)=>a+(x.qty||0)*(x.price||0),0);
+  const totalCost=tempOrderItems.reduce((a,x)=>a+(x.qty||0)*(x.cost||0),0);
+  db.orders.push({id:uid(),number:val('oNumber')||('RCD-'+(db.orders.length+1).toString().padStart(4,'0')),customer:val('oCustomer'),phone:val('oPhone'),email:val('oEmail'),items:[...tempOrderItems],status:val('oStatus'),due:val('oDue'),price:totalPrice,cost:totalCost,notes:val('oNotes')});
+  ['oNumber','oCustomer','oPhone','oEmail','oDue','oNotes','oiItem','oiColor','oiPrice','oiCost','oiDesign'].forEach(id=>set(id,''));
+  set('oiQty',1);
+  tempOrderItems=[];
+  sizes.forEach(s=>{const el=document.getElementById('orderBulk_'+s); const ch=document.getElementById('orderCheck_'+s); if(el){el.value='';el.disabled=true;} if(ch)ch.checked=false;});
+  renderTempOrderItems();
+  save();
+}
+
+function dec(type,id,field='qty'){
+  const item=db[type].find(x=>x.id===id);
+  if(item && Number(item[field])>0){item[field]=Number(item[field])-1;save();}
+}
+function editItem(type,id){
+  const item=db[type].find(x=>x.id===id);
+  if(!item)return;
+  Object.keys(item).forEach(k=>{
+    if(k==='id')return;
+    const nv=prompt(`Edit ${k}`,item[k]);
+    if(nv!==null)item[k]=isNaN(Number(nv))||nv.trim()===''?nv:Number(nv);
+  });
+  save();
+}
+function delItem(type,id){
+  if(confirm('Delete this record?')){db[type]=db[type].filter(x=>x.id!==id);save();}
+}
+
+function rowStatus(q,r){return Number(q)<=Number(r)?'<span class="pill low">Low</span>':'<span class="pill good">Good</span>'}
+function match(item,q){return JSON.stringify(item).toLowerCase().includes((q||'').toLowerCase())}
+
+function renderGarments(){
+  const q=val('garmentSearch');
+  document.getElementById('garmentRows').innerHTML=db.garments.filter(x=>match(x,q)).map(x=>`
+    <tr><td>${esc(x.type)}</td><td>${esc(x.brand)}</td><td>${esc(x.color)}</td><td><b>${esc(x.size)}</b></td><td>${x.qty}</td><td>${money(x.cost)}</td><td>${esc(x.location)}</td><td>${esc(x.barcode)}</td><td>${rowStatus(x.qty,x.reorder)}</td>
+    <td><div class="row-actions"><button onclick="dec('garments','${x.id}')">-1</button><button onclick="editItem('garments','${x.id}')">Edit</button><button onclick="delItem('garments','${x.id}')">Delete</button></div></td></tr>`).join('');
+}
+function renderDtf(){
+  const q=val('dtfSearch');
+  document.getElementById('dtfRows').innerHTML=db.dtf.filter(x=>match(x,q)).map(x=>`
+    <tr><td>${esc(x.name)}</td><td>${esc(x.customer)}</td><td>${x.width} x ${x.height}</td><td>${esc(x.place)}</td><td>${x.qty}</td><td>${money(x.cost)}</td><td>${esc(x.location)}</td><td>${esc(x.barcode)}</td><td>${rowStatus(x.qty,x.reorder)}</td>
+    <td><div class="row-actions"><button onclick="dec('dtf','${x.id}')">-1</button><button onclick="editItem('dtf','${x.id}')">Edit</button><button onclick="delItem('dtf','${x.id}')">Delete</button></div></td></tr>`).join('');
+}
+function renderHtv(){
+  const q=val('htvSearch');
+  document.getElementById('htvRows').innerHTML=db.htv.filter(x=>match(x,q)).map(x=>`
+    <tr><td>${esc(x.type)}</td><td>${esc(x.color)}</td><td>${esc(x.width)}</td><td>${x.yards}</td><td>${esc(x.supplier)}</td><td>${esc(x.location)}</td><td>${esc(x.barcode)}</td><td>${rowStatus(x.yards,x.reorder)}</td>
+    <td><div class="row-actions"><button onclick="dec('htv','${x.id}','yards')">-1 yd</button><button onclick="editItem('htv','${x.id}')">Edit</button><button onclick="delItem('htv','${x.id}')">Delete</button></div></td></tr>`).join('');
+}
+function orderItems(o){
+  if(Array.isArray(o.items))return o.items;
+  return [{item:o.item||'',color:o.color||'',size:o.size||'',qty:o.qty||1,price:(o.price||0)/(o.qty||1),cost:(o.cost||0)/(o.qty||1),design:''}];
+}
+
+function groupItemLines(lines){
+  const groups = {};
+  (lines||[]).forEach(line=>{
+    const key=[line.item||line.desc||'',line.color||'',line.design||'',line.price||'',line.cost||''].join('||');
+    if(!groups[key]) groups[key]={...line, sizes:[], totalQty:0};
+    groups[key].sizes.push({size:line.size||'', qty:Number(line.qty)||0});
+    groups[key].totalQty += Number(line.qty)||0;
+  });
+  return Object.values(groups);
+}
+function groupedItemSummary(lines){
+  return groupItemLines(lines).map(g=>{
+    const sizes=g.sizes.map(s=>`<span class="pill">${esc(s.size)} x ${s.qty}</span>`).join(' ');
+    return `<div style="margin-bottom:8px"><b>${esc(g.item||g.desc)}</b> ${esc(g.color||'')} ${g.design?'<small>'+esc(g.design)+'</small>':''}<br>${sizes}</div>`;
+  }).join('');
+}
+function renderOrders(){
+  const q=val('orderSearch');
+  document.getElementById('orderRows').innerHTML=db.orders.filter(x=>match(x,q)).map(x=>{
+    const items=orderItems(x);
+    const totalQty=items.reduce((a,it)=>a+(Number(it.qty)||0),0);
+    const itemList='<div class="item-summary">'+groupedItemSummary(items)+'</div>';
+    const price=items.reduce((a,it)=>a+(it.qty||0)*(it.price||0),0) || x.price || 0;
+    const cost=items.reduce((a,it)=>a+(it.qty||0)*(it.cost||0),0) || x.cost || 0;
+    return `<tr><td><b>${esc(x.number)}</b><br><small>${items.length} line item${items.length===1?'':'s'}</small></td><td>${esc(x.customer)}<br><small>${esc(x.phone)} ${esc(x.email)}</small></td><td>${itemList}</td><td>${totalQty}</td><td><span class="pill">${esc(x.status)}</span></td><td>${esc(x.due)}</td><td>${money(price)}</td><td>${money(price-cost)}</td>
+    <td><div class="row-actions"><button onclick="editItem('orders','${x.id}')">Edit</button><button onclick="makeInvoiceFromOrder('${x.id}')">Invoice</button><button onclick="delItem('orders','${x.id}')">Delete</button></div></td></tr>`;
+  }).join('');
+}
+
+function makeInvoiceFromOrder(id){
+  const o=db.orders.find(x=>x.id===id); if(!o)return;
+  set('iNumber',o.number);set('iCustomer',o.customer);set('iContact',[o.email,o.phone].filter(Boolean).join(' / '));
+  db.invoice.lines=orderItems(o).map(it=>({desc:it.item, color:it.color, size:it.size, qty:it.qty, price:it.price, design:it.design}));
+  set('iNotes',o.notes);showTab('invoice');renderInvoice();
+}
+function addLineItem(){
+  if(!db.invoice)db.invoice={lines:[]};
+  db.invoice.lines.push({desc:val('liDesc'),color:val('liColor'),size:val('liSize'),qty:num('liQty'),price:num('liPrice')});
+  ['liDesc','liColor','liSize','liPrice'].forEach(id=>set(id,''));
+  set('liQty',1);save();renderInvoice();
+}
+function addInvoiceBulkSizes(){
+  if(!db.invoice)db.invoice={lines:[]};
+  const base={desc:val('liDesc'),color:val('liColor'),price:num('liPrice')};
+  if(!base.desc)return alert('Add an item or description first.');
+  let added=0;
+  sizes.forEach(s=>{
+    const check=document.getElementById('invoiceCheck_'+s);
+    const el=document.getElementById('invoiceBulk_'+s);
+    const q=el?Number(el.value)||0:0;
+    if(check && check.checked && q>0){
+      db.invoice.lines.push({...base,size:s,qty:q});
+      el.value='';
+      el.disabled=true;
+      check.checked=false;
+      added++;
+    }
+  });
+  if(!added)return alert('Check at least one size and enter a quantity.');
+  alert('Added '+added+' size line(s) for this invoice item. Add another different item next, or print/save the invoice.');
+  ['liDesc','liColor','liSize','liPrice'].forEach(id=>set(id,''));
+  set('liQty',1);
+  save();
+  renderInvoice();
+}
+function clearInvoice(){db.invoice={lines:[]};['iNumber','iCustomer','iContact','iNotes'].forEach(id=>set(id,''));sizes.forEach(s=>{const el=document.getElementById('invoiceBulk_'+s); const ch=document.getElementById('invoiceCheck_'+s); if(el){el.value='';el.disabled=true;} if(ch)ch.checked=false;});renderInvoice();}
+function removeLine(i){db.invoice.lines.splice(i,1);save();renderInvoice();}
+function editInvoiceLine(i){
+  const l=db.invoice.lines[i]; if(!l)return;
+  const desc=prompt('Item / Description',l.desc); if(desc===null)return;
+  const color=prompt('Color',l.color||''); if(color===null)return;
+  const size=prompt('Size',l.size||''); if(size===null)return;
+  const qty=prompt('Quantity',l.qty); if(qty===null)return;
+  const price=prompt('Unit Price',l.price); if(price===null)return;
+  db.invoice.lines[i]={...l,desc,color,size,qty:Number(qty)||0,price:Number(price)||0};
+  save();renderInvoice();
+}
+function duplicateInvoiceLine(i){
+  const l=db.invoice.lines[i]; if(!l)return;
+  db.invoice.lines.push({...l});
+  save();renderInvoice();
+}
+function renderInvoice(){
+  const lines=(db.invoice&&db.invoice.lines)||[];
+  const subtotal=lines.reduce((a,l)=>a+(Number(l.qty)||0)*(Number(l.price)||0),0);
+  const wholesale=val('iWholesale')==='wholesale';
+  const tax=wholesale?0:subtotal*(num('iTax')/100);
+  const total=subtotal+tax;
+  document.getElementById('invoicePreview').innerHTML=`
+    <div class="invoice-head">
+      <div><div class="invoice-title">INVOICE</div><b>Redwood Coast Design</b><br><small>Custom apparel, transfers, and spirit wear</small></div>
+      <div><b>Invoice #:</b> ${esc(val('iNumber'))}<br><b>Date:</b> ${esc(val('iDate'))}<br><b>Type:</b> ${wholesale?'Wholesale':'Retail'}</div>
+    </div>
+    <p><b>Bill To:</b><br>${esc(val('iCustomer'))}<br>${esc(val('iContact'))}</p>
+    <p><b>Invoice Items:</b> ${lines.length}</p>
+    <p><b>Grouped View:</b></p><div class="item-summary">${groupedItemSummary(lines)}</div>
+    <table style="min-width:0"><thead><tr><th>Description</th><th>Color</th><th>Size</th><th>Qty</th><th>Unit</th><th>Total</th><th class="no-print"></th></tr></thead><tbody>
+    ${lines.map((l,i)=>`<tr><td>${esc(l.desc)}${l.design?'<br><small>'+esc(l.design)+'</small>':''}</td><td>${esc(l.color)}</td><td>${esc(l.size)}</td><td>${l.qty}</td><td>${money(l.price)}</td><td>${money((l.qty||0)*(l.price||0))}</td><td class="no-print"><div class="row-actions"><button onclick="editInvoiceLine(${i})">Edit</button><button onclick="duplicateInvoiceLine(${i})">Duplicate</button><button onclick="removeLine(${i})">Remove</button></div></td></tr>`).join('')}
+    </tbody></table>
+    <div style="max-width:320px;margin-left:auto;margin-top:14px">
+      <p><b>Subtotal:</b> ${money(subtotal)}</p>
+      <p><b>Sales Tax:</b> ${money(tax)} ${wholesale?'<small>(Wholesale)</small>':''}</p>
+      <h2>Total: ${money(total)}</h2>
+    </div>
+    <p><b>Notes:</b><br>${esc(val('iNotes'))}</p>`;
+}
+
+function renderLabels(){
+  const sel=document.getElementById('labelOrder');
+  const current=sel.value;
+  sel.innerHTML=db.orders.map(o=>`<option value="${o.id}">${esc(o.number)} - ${esc(o.customer)}</option>`).join('');
+  if(current)sel.value=current;
+  const o=db.orders.find(x=>x.id===sel.value)||db.orders[0];
+  if(!o){document.getElementById('labelPreview').innerHTML='<p>No orders yet. Add one order, then labels will appear here.</p>';return;}
+  const items=orderItems(o);
+  const totalQty=items.reduce((a,it)=>a+(Number(it.qty)||0),0);
+  const count=Math.max(1,Number(document.getElementById('labelCount').value)||totalQty||1);
+  const expanded=[];
+  items.forEach(it=>{for(let i=0;i<(Number(it.qty)||1);i++)expanded.push(it);});
+  const indiv=expanded.slice(0,count).map((it,i)=>`<div class="label"><strong>${esc(o.customer)}</strong><br>Order: ${esc(o.number)}<br>${esc(it.item)}<br>Color: ${esc(it.color)}<br>Size: ${esc(it.size)}<br>${it.design?esc(it.design)+'<br>':''}Piece ${i+1}</div>`).join('');
+  const orderList=items.map(it=>`${esc(it.item)} - ${esc(it.color)} - ${esc(it.size)} x ${it.qty}${it.design?' - '+esc(it.design):''}`).join('<br>');
+  document.getElementById('labelPreview').innerHTML=`
+    <div class="label" style="margin-bottom:14px"><strong>ORDER LABEL</strong><br><b>${esc(o.customer)}</b><br>Order: ${esc(o.number)}<br>${orderList}<br>Due: ${esc(o.due)}<br>Status: ${esc(o.status)}</div>
+    <div class="label-sheet">${indiv}</div>`;
+}
+
+function renderStats(){
+  const garmentQty=db.garments.reduce((a,x)=>a+(Number(x.qty)||0),0);
+  const dtfQty=db.dtf.reduce((a,x)=>a+(Number(x.qty)||0),0);
+  const htvYards=db.htv.reduce((a,x)=>a+(Number(x.yards)||0),0);
+  const open=db.orders.filter(o=>!['Picked Up','Pressed / Complete'].includes(o.status)).length;
+  const ready=db.orders.filter(o=>o.status==='Ready to Press').length;
+  const gVal=db.garments.reduce((a,x)=>a+(x.qty||0)*(x.cost||0),0);
+  const dVal=db.dtf.reduce((a,x)=>a+(x.qty||0)*(x.cost||0),0);
+  const revenue=db.orders.reduce((a,x)=>a+(orderItems(x).reduce((b,it)=>b+(it.qty||0)*(it.price||0),0)||x.price||0),0);
+  const cost=db.orders.reduce((a,x)=>a+(orderItems(x).reduce((b,it)=>b+(it.qty||0)*(it.cost||0),0)||x.cost||0),0);
+  document.getElementById('statGarments').textContent=garmentQty;
+  document.getElementById('statDtf').textContent=dtfQty;
+  document.getElementById('statHtv').textContent=htvYards.toFixed(1);
+  document.getElementById('statOrders').textContent=open;
+  document.getElementById('statValue').textContent=money(gVal+dVal);
+  document.getElementById('statRevenue').textContent=money(revenue);
+  document.getElementById('statProfit').textContent=money(revenue-cost);
+  document.getElementById('statReady').textContent=ready;
+  document.querySelectorAll('.stat').forEach((card,i)=>{
+    if(!card.querySelector('.progress')){
+      const p=document.createElement('div');p.className='progress';p.innerHTML='<i></i>';card.appendChild(p);
+    }
+    const bar=card.querySelector('.progress i');
+    const nums=[garmentQty,dtfQty,htvYards,open,gVal+dVal,revenue,Math.max(0,revenue-cost),ready];
+    const max=Math.max(1, ...nums.map(n=>Number(n)||0));
+    bar.style.width=Math.max(8,Math.min(100,((nums[i]||0)/max)*100))+'%';
+  });
+  document.getElementById('repGarmentValue').textContent=money(gVal);
+  document.getElementById('repDtfValue').textContent=money(dVal);
+  document.getElementById('repHtvYards').textContent=htvYards.toFixed(1);
+  const counts={}; db.orders.forEach(o=>orderItems(o).forEach(it=>{counts[it.item]=(counts[it.item]||0)+(it.qty||0)}));
+  const best=Object.entries(counts).sort((a,b)=>b[1]-a[1])[0];
+  document.getElementById('repBest').textContent=best?best[0]:'-';
+  const lows=[
+    ...db.garments.filter(x=>Number(x.qty)<=Number(x.reorder)).map(x=>`Garment: ${x.brand} ${x.color} ${x.size} - Qty ${x.qty}`),
+    ...db.dtf.filter(x=>Number(x.qty)<=Number(x.reorder)).map(x=>`DTF: ${x.name} ${x.width}x${x.height} - Qty ${x.qty}`),
+    ...db.htv.filter(x=>Number(x.yards)<=Number(x.reorder)).map(x=>`HTV: ${x.type} ${x.color} - ${x.yards} yd`)
+  ];
+  const lowHtml=lows.length?'<ul>'+lows.map(x=>`<li>${esc(x)}</li>`).join('')+'</ul>':'<p>Nothing is low right now. That part is handled.</p>';
+  document.getElementById('lowAlerts').innerHTML=lowHtml;
+  document.getElementById('reportLow').innerHTML=lowHtml;
+}
+
+function backupData(){
+  const blob=new Blob([JSON.stringify(db,null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='rcd-inventory-backup.json';a.click();
+}
+function restoreData(e){
+  const file=e.target.files[0]; if(!file)return;
+  const r=new FileReader();r.onload=()=>{db=JSON.parse(r.result);save();};r.readAsText(file);
+}
+function clearAll(){if(confirm('This deletes all saved app data on this device. Continue?')){db={garments:[],dtf:[],htv:[],orders:[],invoice:{lines:[]}};save();}}
+function exportCSV(){
+  const rows=[];
+  ['garments','dtf','htv','orders'].forEach(type=>db[type].forEach(x=>rows.push({type,...x})));
+  const keys=[...new Set(rows.flatMap(Object.keys))];
+  const csv=[keys.join(','),...rows.map(r=>keys.map(k=>`"${String(r[k]??'').replace(/"/g,'""')}"`).join(','))].join('\n');
+  const blob=new Blob([csv],{type:'text/csv'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='rcd-inventory-export.csv';a.click();
+}
+function printSection(id){showTab(id);window.print();}
+function renderAll(){renderStats();renderGarments();renderDtf();renderHtv();renderOrders();renderInvoice();renderLabels();renderTempOrderItems();}
+renderAll();
+</script>
+</body>
+</html>
